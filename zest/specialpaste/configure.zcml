@@ -1,11 +1,33 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="zest.specialpaste">
 
   <five:registerPackage package="." initialize=".initialize" />
+
+  <!-- XXX other permission? -->
+  <!-- XXX only for folderish? -->
+  <browser:page
+      for="zope.interface.Interface"
+      name="special-paste"
+      class=".browser.SpecialPaste"
+      permission="zope2.View"
+      />
+
+  <subscriber
+      for="zope.interface.Interface
+           zope.lifecycleevent.interfaces.IObjectCopiedEvent"
+      handler=".eventhandlers.update_copied_objects_list"
+      />
+
+  <subscriber
+      for="zope.interface.Interface
+           OFS.interfaces.IObjectClonedEvent"
+      handler=".eventhandlers.update_cloned_object"
+      />
 
   <genericsetup:registerProfile
       name="default"
@@ -14,6 +36,5 @@
       description="Installs the zest.specialpaste package"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
-  <!-- -*- extra stuff goes here -*- -->
   
 </configure>

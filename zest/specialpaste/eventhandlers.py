@@ -61,3 +61,4 @@ def update_cloned_object(object, event):
         original_state = wf_tool.getInfoFor(original_object, 'review_state')
     except WorkflowException:
         return
+    # TODO set state, probably directly.

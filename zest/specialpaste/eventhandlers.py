@@ -8,6 +8,7 @@ from zest.specialpaste.interfaces import ISpecialPasteInProgress
 
 logger = logging.getLogger(__name__)
 ANNO_KEY = 'zest.specialpaste.original'
+_marker = object()
 
 
 def update_copied_objects_list(object, event):
@@ -57,8 +58,34 @@ def update_cloned_object(object, event):
     # del annotations[ANNO_KEY]
     original_object = object.restrictedTraverse('/'.join(original_path))
     wf_tool = getToolByName(object, 'portal_workflow')
-    try:
-        original_state = wf_tool.getInfoFor(original_object, 'review_state')
-    except WorkflowException:
+    wfs = wf_tool.getWorkflowsFor(original_object)
+    if wfs is None:
         return
-    # TODO set state, probably directly.
+    for wf in wfs:
+        if not wf.isInfoSupported(original_object, 'review_state'):
+            continue
+        original_state = wf.getInfoFor(original_object, 'review_state',
+                                       _marker)
+        if original_state is _marker:
+            continue
+
+        # We need to store a real status on the new object.
+        former_status = wf_tool.getStatusOf(wf.id, original_object)
+        if former_status is None:
+            former_status = {}
+        # Use a copy for good measure
+        status = former_status.copy()
+
+        # We could fire a BeforeTransitionEvent and an
+        # AfterTransitionEvent, but that does not seem wise, as we do
+        # not want to treat this as a transition at all.
+        try:
+            wf_tool.setStatusOf(wf.id, object, status)
+        except WorkflowException:
+            logger.warn("WorkflowException when setting review state of "
+                        "cloned object %r to %s.", object, original_state)
+        else:
+            logger.info("Setting review state of cloned "
+                        "object %r to %s.", object, original_state)
+            # Update role to permission assignments.
+            wf.updateRoleMappingsFor(object)

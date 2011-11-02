@@ -5,7 +5,12 @@ from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from zope.configuration import xmlconfig
 from zope.event import notify
-from zope.traversing.interfaces import BeforeTraverseEvent
+try:
+    from zope.traversing.interfaces import BeforeTraverseEvent
+    BeforeTraverseEvent  # pyflakes
+except ImportError:
+    # BBB for Zope 2.12
+    from zope.app.publication.interfaces import BeforeTraverseEvent
 
 
 class SpecialPasteNotInstalled(PloneSandboxLayer):

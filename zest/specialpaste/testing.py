@@ -19,15 +19,9 @@ class SpecialPasteNotInstalled(PloneSandboxLayer):
                        context=configurationContext)
 
 
-class SpecialPaste(PloneSandboxLayer):
+class SpecialPaste(SpecialPasteNotInstalled):
 
     defaultBases = (PLONE_FIXTURE,)
-
-    def setUpZope(self, app, configurationContext):
-        # Load ZCML
-        import zest.specialpaste
-        xmlconfig.file('configure.zcml', zest.specialpaste,
-                       context=configurationContext)
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'zest.specialpaste:default')

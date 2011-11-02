@@ -4,6 +4,19 @@ from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import IntegrationTesting
 from zope.configuration import xmlconfig
 from Products.CMFCore.utils import getToolByName
+from zope.traversing.interfaces import BeforeTraverseEvent
+from zope.event import notify
+
+
+class SpecialPasteNotInstalled(PloneSandboxLayer):
+
+    defaultBases = (PLONE_FIXTURE,)
+
+    def setUpZope(self, app, configurationContext):
+        # Load ZCML
+        import zest.specialpaste
+        xmlconfig.file('configure.zcml', zest.specialpaste,
+                       context=configurationContext)
 
 
 class SpecialPaste(PloneSandboxLayer):
@@ -22,6 +35,11 @@ class SpecialPaste(PloneSandboxLayer):
         wf_tool = getToolByName(portal, 'portal_workflow')
         wf_tool.setDefaultChain('simple_publication_workflow')
 
+
+ZEST_SPECIAL_PASTE_NOT_INSTALLED_FIXTURE = SpecialPasteNotInstalled()
+ZEST_SPECIAL_PASTE_NOT_INSTALLED_INTEGRATION_TESTING = IntegrationTesting(
+    bases=(ZEST_SPECIAL_PASTE_NOT_INSTALLED_FIXTURE,),
+    name="SpecialPasteNotInstalled:Integration")
 
 ZEST_SPECIAL_PASTE_FIXTURE = SpecialPaste()
 ZEST_SPECIAL_PASTE_INTEGRATION_TESTING = IntegrationTesting(
@@ -73,3 +91,8 @@ def make_folder_structure(portal):
 
     # target folder for pasting into.
     portal.invokeFactory('Folder', 'target-folder')
+
+
+def start_traversing(object, request):
+    # This makes sure plone.browserlayer is activated.
+    notify(BeforeTraverseEvent(object, request))

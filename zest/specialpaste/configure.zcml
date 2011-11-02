@@ -15,6 +15,7 @@
       name="special-paste"
       class=".browser.SpecialPaste"
       permission="zope2.View"
+      layer="zest.specialpaste.interfaces.IZestSpecialPasteLayer"
       />
 
   <subscriber

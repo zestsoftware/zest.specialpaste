@@ -4,8 +4,13 @@ from Products.CMFCore.utils import getToolByName
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import setRoles
 
-from zest.specialpaste.testing import ZEST_SPECIAL_PASTE_INTEGRATION_TESTING
-from zest.specialpaste.testing import make_test_doc, make_folder_structure
+from zest.specialpaste.testing import (
+    ZEST_SPECIAL_PASTE_NOT_INSTALLED_INTEGRATION_TESTING,
+    ZEST_SPECIAL_PASTE_INTEGRATION_TESTING,
+    make_test_doc,
+    make_folder_structure,
+    start_traversing,
+    )
 
 
 class TestNormalPaste(unittest.TestCase):
@@ -56,6 +61,7 @@ class TestNormalPaste(unittest.TestCase):
                          'published')
         # Call the skin scripts that would be used when copy-pasting
         # in a browser.
+        start_traversing(portal, self.layer['request'])
         portal['doc'].restrictedTraverse('object_copy')()
         portal.restrictedTraverse('object_paste')()
         new_id = 'copy_of_doc'
@@ -134,6 +140,7 @@ class TestSpecialPaste(unittest.TestCase):
                          'private')
         # Call the skin scripts that would be used when copy-pasting
         # in a browser.
+        start_traversing(portal, self.layer['request'])
         portal['doc'].restrictedTraverse('object_copy')()
         portal.restrictedTraverse('@@special-paste')()
         new_id = 'copy_of_doc'
@@ -151,6 +158,7 @@ class TestSpecialPaste(unittest.TestCase):
                          'published')
         # Call the skin scripts that would be used when copy-pasting
         # in a browser.
+        start_traversing(portal, self.layer['request'])
         portal['doc'].restrictedTraverse('object_copy')()
         portal.restrictedTraverse('@@special-paste')()
         new_id = 'copy_of_doc'
@@ -181,6 +189,7 @@ class TestSpecialPaste(unittest.TestCase):
         target = portal['target-folder']
         # Sanity check for the cookie with info about the copied objects:
         self.assertTrue(target.cb_dataValid())
+        start_traversing(portal, self.layer['request'])
         target.restrictedTraverse('@@special-paste')()
         self.assertEqual(len(target.contentIds()), len(main_objects))
 
@@ -228,3 +237,22 @@ class TestSetUp(unittest.TestCase):
         object_buttons = [action.getId() for action in
                           action_tool.object_buttons.listActions()]
         self.assertTrue('specialpaste' in object_buttons)
+
+    def testSpecialPasteAvailableWhenInstalled(self):
+        portal = self.layer['portal']
+        setRoles(portal, TEST_USER_ID, ('Manager',))
+        start_traversing(portal, self.layer['request'])
+        portal.restrictedTraverse('@@special-paste')
+
+
+class TestNotInstalled(unittest.TestCase):
+
+    layer = ZEST_SPECIAL_PASTE_NOT_INSTALLED_INTEGRATION_TESTING
+
+    def testSpecialPasteNotAvailableWhenNotInstalled(self):
+        portal = self.layer['portal']
+        setRoles(portal, TEST_USER_ID, ('Manager',))
+        start_traversing(portal, self.layer['request'])
+        self.assertRaises(AttributeError,
+                          portal.restrictedTraverse,
+                          ('@@special-paste',))

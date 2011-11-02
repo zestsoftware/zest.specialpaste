@@ -49,3 +49,79 @@ class TestNormalPaste(unittest.TestCase):
         # private.
         self.assertEqual(wf_tool.getInfoFor(new_doc, 'review_state'),
                          'private')
+
+    def testObjectCopyPastePublic(self):
+        portal = self.layer['portal']
+        wf_tool = getToolByName(portal, 'portal_workflow')
+        doc = self._makeOne('publish')
+        wf_tool = getToolByName(portal, 'portal_workflow')
+        self.assertEqual(wf_tool.getInfoFor(doc, 'review_state'),
+                         'published')
+        # Call the skin scripts that would be used when copy-pasting
+        # in a browser.
+        portal['doc'].restrictedTraverse('object_copy')()
+        portal.restrictedTraverse('object_paste')()
+        new_id = 'copy_of_doc'
+        new_doc = portal[new_id]
+        # This is a normal copy-paste, so the pasted doc should be
+        # private.
+        self.assertEqual(wf_tool.getInfoFor(new_doc, 'review_state'),
+                         'private')
+
+    def TODOtestFolderCopyPaste(self):
+        # Test copying multiple items, possibly nested, with various
+        # review states.
+        pass
+
+
+class TestSpecialPaste(unittest.TestCase):
+
+    layer = ZEST_SPECIAL_PASTE_INTEGRATION_TESTING
+
+    def _makeOne(self, transition=None):
+        portal = self.layer['portal']
+        setRoles(portal, TEST_USER_ID, ('Manager',))
+        new_id = portal.invokeFactory('Document', 'doc')
+        doc = portal[new_id]
+        if transition is not None:
+            wf_tool = getToolByName(portal, 'portal_workflow')
+            wf_tool.doActionFor(doc, transition)
+        return doc
+
+    def testCopyPastePrivate(self):
+        portal = self.layer['portal']
+        wf_tool = getToolByName(portal, 'portal_workflow')
+        doc = self._makeOne()
+        self.assertEqual(wf_tool.getInfoFor(doc, 'review_state'),
+                         'private')
+        # Call the skin scripts that would be used when copy-pasting
+        # in a browser.
+        portal['doc'].restrictedTraverse('object_copy')()
+        portal.restrictedTraverse('@@special-paste')()
+        new_id = 'copy_of_doc'
+        new_doc = portal[new_id]
+        self.assertEqual(wf_tool.getInfoFor(new_doc, 'review_state'),
+                         'private')
+
+    def testObjectCopyPastePublic(self):
+        portal = self.layer['portal']
+        wf_tool = getToolByName(portal, 'portal_workflow')
+        doc = self._makeOne('publish')
+        wf_tool = getToolByName(portal, 'portal_workflow')
+        self.assertEqual(wf_tool.getInfoFor(doc, 'review_state'),
+                         'published')
+        # Call the skin scripts that would be used when copy-pasting
+        # in a browser.
+        portal['doc'].restrictedTraverse('object_copy')()
+        portal.restrictedTraverse('@@special-paste')()
+        new_id = 'copy_of_doc'
+        new_doc = portal[new_id]
+        # This is a special copy-paste, so the pasted doc should be
+        # published.
+        self.assertEqual(wf_tool.getInfoFor(new_doc, 'review_state'),
+                         'published')
+
+    def TODOtestFolderCopyPaste(self):
+        # Test copying multiple items, possibly nested, with various
+        # review states.
+        pass

@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zest.specialpaste 1.0\n"
-"POT-Creation-Date: 2011-11-02 15:06+0000\n"
+"POT-Creation-Date: 2011-11-02 15:15+0000\n"
 "PO-Revision-Date: 2011-11-02 16:04+0100\n"
 "Last-Translator: # Maurits van Rees <m.van.rees@zestsoftware.nl>\n"
 "Language-Team: Plone Nederlands <plone-nl@lists.plone.org>\n"
@@ -16,7 +16,15 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: zest.specialpaste\n"
 
+#: ./configure.zcml
+msgid "Installs the zest.specialpaste package"
+msgstr "Installeert het zest.specialpaste pakket"
+
 #: ./profiles/default/actions.xml
 msgid "Special Paste"
 msgstr "Speciaal plakken"
+
+#: ./configure.zcml
+msgid "Zest Special Paste"
+msgstr "Zest Special Paste"
 

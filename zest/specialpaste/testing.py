@@ -17,11 +17,9 @@ class SpecialPaste(PloneSandboxLayer):
                        context=configurationContext)
 
     def setUpPloneSite(self, portal):
-        #applyProfile(portal, 'zest.specialpaste:default')
+        applyProfile(portal, 'zest.specialpaste:default')
         # Set a default workflow chain.
         wf_tool = getToolByName(portal, 'portal_workflow')
-        #wf_tool.setChainForPortalTypes(
-        #    ('Document',), 'simple_publication_workflow')
         wf_tool.setDefaultChain('simple_publication_workflow')
 
 

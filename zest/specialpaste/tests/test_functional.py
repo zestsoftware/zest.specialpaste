@@ -196,7 +196,7 @@ class TestSpecialPaste(unittest.TestCase):
         self.assertEqual(get_state(
             target['private-folder']['private-doc']), 'private')
         self.assertEqual(get_state(
-            target['private-folder']['published-doc']), 'published')  # XXX This fails.
+            target['private-folder']['published-doc']), 'published')
         self.assertEqual(get_state(
             target['private-folder']['pending-doc']), 'pending')
         self.assertEqual(get_state(
@@ -211,3 +211,20 @@ class TestSpecialPaste(unittest.TestCase):
             target['published-folder']['pending-doc']), 'pending')
         self.assertEqual(get_state(
             target['published-folder']['private-sub-folder']), 'private')
+
+
+class TestSetUp(unittest.TestCase):
+
+    layer = ZEST_SPECIAL_PASTE_INTEGRATION_TESTING
+
+    def testActions(self):
+        portal = self.layer['portal']
+        action_tool = getToolByName(portal, 'portal_actions')
+        # This does not work for any action:
+        #action_tool.getActionObject('folder_buttons/specialpaste')
+        folder_buttons = [action.getId() for action in
+                          action_tool.folder_buttons.listActions()]
+        self.assertTrue('specialpaste' in folder_buttons)
+        object_buttons = [action.getId() for action in
+                          action_tool.object_buttons.listActions()]
+        self.assertTrue('specialpaste' in object_buttons)

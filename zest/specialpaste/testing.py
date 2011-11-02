@@ -10,7 +10,7 @@ class SpecialPaste(PloneSandboxLayer):
 
     defaultBases = (PLONE_FIXTURE,)
 
-    def XXXsetUpZope(self, app, configurationContext):
+    def setUpZope(self, app, configurationContext):
         # Load ZCML
         import zest.specialpaste
         xmlconfig.file('configure.zcml', zest.specialpaste,

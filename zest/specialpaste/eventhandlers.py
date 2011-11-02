@@ -19,6 +19,17 @@ def update_copied_objects_list(object, event):
     the old object now.
 
     Note: this might be called too many times.
+
+    When a folder with document is copied, one event is sent for the
+    folder and one for the document.  The document one is special:
+
+    - object is copy of document
+
+    - event.object is copy of folder
+
+    - event.original is original folder
+
+    Both copies have not been added to an acquisition context yet.
     """
     request = event.original.REQUEST
     if not ISpecialPasteInProgress.providedBy(request):
@@ -28,7 +39,11 @@ def update_copied_objects_list(object, event):
         logger.warn("Annotations on object not supported: "
                     "zest.specialpaste will not work.")
         return
-    annotations[ANNO_KEY] = event.original.getPhysicalPath()
+    if object is event.object:
+        original = event.original
+    else:
+        original = event.original[object.getId()]
+    annotations[ANNO_KEY] = original.getPhysicalPath()
     logger.info("Annotation set.")
 
 

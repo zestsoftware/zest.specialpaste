@@ -35,7 +35,7 @@
 
   <genericsetup:registerProfile
       name="default"
-      title="zest.specialpaste"
+      title="Zest Special Paste"
       directory="profiles/default"
       description="Installs the zest.specialpaste package"
       provides="Products.GenericSetup.interfaces.EXTENSION"

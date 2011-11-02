@@ -1,11 +1,11 @@
+from Products.CMFCore.utils import getToolByName
+from plone.app.testing import IntegrationTesting
+from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
-from plone.app.testing import PLONE_FIXTURE
-from plone.app.testing import IntegrationTesting
 from zope.configuration import xmlconfig
-from Products.CMFCore.utils import getToolByName
-from zope.traversing.interfaces import BeforeTraverseEvent
 from zope.event import notify
+from zope.traversing.interfaces import BeforeTraverseEvent
 
 
 class SpecialPasteNotInstalled(PloneSandboxLayer):

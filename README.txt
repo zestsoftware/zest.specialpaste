@@ -41,7 +41,7 @@ Installation
 
 - Install Zest Special Paste in the Add-on Products control panel.
   This adds a 'Special paste' action on objects and registers a
-  browser layer that makes our @@special-paste browser view available.
+  browser layer that makes our ``@@special-paste`` browser view available.
 
 
 Future ideas

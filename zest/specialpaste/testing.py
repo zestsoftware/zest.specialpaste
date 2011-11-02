@@ -65,6 +65,7 @@ def make_folder_structure(portal):
     # published folder
     portal.invokeFactory('Folder', 'published-folder')
     folder = portal['published-folder']
+    wf_tool.doActionFor(folder, 'publish')
     folder.invokeFactory('Document', 'private-doc')
     folder.invokeFactory('Document', 'published-doc')
     wf_tool.doActionFor(folder['published-doc'], 'publish')

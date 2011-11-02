@@ -4,7 +4,7 @@
 
 
 Introduction
-------------
+============
 
 When copying and pasting an object in Plone the workflow state of the
 newly pasted object is set to the initial state.  Sometimes you want
@@ -12,7 +12,7 @@ to keep the original state.  This is what ``zest.specialpaste`` does.
 
 
 Use case
---------
+========
 
 You use Plone to store some information about clients in a folder.
 You have created a standard folder with a few sub folders and several
@@ -26,14 +26,14 @@ originals.
 
 
 Compatibility
--------------
+=============
 
 Tested on Plone 4.0 and 4.1.  Currently it does not work on Plone 3.3;
 that surprises me, so it might be fixable.
 
 
 Installation
-------------
+============
 
 - Add ``zest.specialpaste`` to the ``eggs`` of your buildout (and to
   the ``zcml`` too if you are on Plone 3.2 or earlier, but it does not
@@ -45,7 +45,7 @@ Installation
 
 
 Future ideas
-------------
+============
 
 - We can add a form in between where you can specify what should be
   special for the paste.  When selecting no options it should do the

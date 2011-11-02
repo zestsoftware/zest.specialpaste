@@ -22,7 +22,7 @@ setup(name='zest.specialpaste',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          # -*- Extra requirements: -*-
+          'Products.CMFPlone',
       ],
       extras_require={
             'test': ['plone.app.testing'],

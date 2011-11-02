@@ -104,3 +104,7 @@ def update_cloned_object(object, event):
                         "object %r to %s.", object, original_state)
             # Update role to permission assignments.
             wf.updateRoleMappingsFor(object)
+
+    # Update the catalog, especially the review_state.
+    # object.reindexObjectSecurity() does not help though.
+    object.reindexObject(idxs='review_state')

@@ -1,6 +1,8 @@
 import unittest2 as unittest
 
 from Products.CMFCore.utils import getToolByName
+from plone.app.testing import TEST_USER_ID
+from plone.app.testing import setRoles
 
 from zest.specialpaste.testing import ZEST_SPECIAL_PASTE_INTEGRATION_TESTING
 from zest.specialpaste.testing import make_test_doc
@@ -15,6 +17,7 @@ class TestNormalPaste(unittest.TestCase):
 
     def testCopyPastePrivate(self):
         portal = self.layer['portal']
+        setRoles(portal, TEST_USER_ID, ('Manager',))
         wf_tool = getToolByName(portal, 'portal_workflow')
         doc = self._makeOne()
         self.assertEqual(wf_tool.getInfoFor(doc, 'review_state'),
@@ -28,6 +31,7 @@ class TestNormalPaste(unittest.TestCase):
 
     def testCopyPastePublic(self):
         portal = self.layer['portal']
+        setRoles(portal, TEST_USER_ID, ('Manager',))
         wf_tool = getToolByName(portal, 'portal_workflow')
         doc = self._makeOne('publish')
         wf_tool = getToolByName(portal, 'portal_workflow')
@@ -44,6 +48,7 @@ class TestNormalPaste(unittest.TestCase):
 
     def testObjectCopyPastePublic(self):
         portal = self.layer['portal']
+        setRoles(portal, TEST_USER_ID, ('Manager',))
         wf_tool = getToolByName(portal, 'portal_workflow')
         doc = self._makeOne('publish')
         wf_tool = getToolByName(portal, 'portal_workflow')
@@ -75,6 +80,7 @@ class TestSpecialPaste(unittest.TestCase):
 
     def testCopyPastePrivate(self):
         portal = self.layer['portal']
+        setRoles(portal, TEST_USER_ID, ('Manager',))
         wf_tool = getToolByName(portal, 'portal_workflow')
         doc = self._makeOne()
         self.assertEqual(wf_tool.getInfoFor(doc, 'review_state'),
@@ -90,6 +96,7 @@ class TestSpecialPaste(unittest.TestCase):
 
     def testObjectCopyPastePublic(self):
         portal = self.layer['portal']
+        setRoles(portal, TEST_USER_ID, ('Manager',))
         wf_tool = getToolByName(portal, 'portal_workflow')
         doc = self._makeOne('publish')
         wf_tool = getToolByName(portal, 'portal_workflow')

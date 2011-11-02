@@ -1,8 +1,6 @@
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import PLONE_FIXTURE
-from plone.app.testing import TEST_USER_ID
-from plone.app.testing import setRoles
 from plone.app.testing import IntegrationTesting
 from zope.configuration import xmlconfig
 from Products.CMFCore.utils import getToolByName
@@ -35,7 +33,6 @@ ZEST_SPECIAL_PASTE_INTEGRATION_TESTING = IntegrationTesting(
 
 
 def make_test_doc(portal, transition=None):
-    setRoles(portal, TEST_USER_ID, ('Manager',))
     new_id = portal.invokeFactory('Document', 'doc')
     doc = portal[new_id]
     if transition is not None:

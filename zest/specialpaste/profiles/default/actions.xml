@@ -2,7 +2,7 @@
 <object name="portal_actions" meta_type="Plone Actions Tool"
    xmlns:i18n="http://xml.zope.org/namespaces/i18n">
  <object name="folder_buttons" meta_type="CMF Action Category">
-  <object name="specialpaste" meta_type="CMF Action" i18n:domain="zest.specialpaste">
+  <object name="specialpaste" meta_type="CMF Action" i18n:domain="zest.specialpaste" insert-after="paste">
    <property name="title" i18n:translate="">Special Paste</property>
    <property name="description" i18n:translate=""></property>
    <property name="url_expr">string:@@special-paste:method</property>
@@ -14,7 +14,7 @@
   </object>
  </object>
  <object name="object_buttons" meta_type="CMF Action Category">
-  <object name="specialpaste" meta_type="CMF Action" i18n:domain="zest.specialpaste">
+  <object name="specialpaste" meta_type="CMF Action" i18n:domain="zest.specialpaste" insert-after="paste">
    <property name="title" i18n:translate="">Special Paste</property>
    <property name="description" i18n:translate=""></property>
    <property name="url_expr">string:${globals_view/getCurrentFolderUrl}/@@special-paste</property>

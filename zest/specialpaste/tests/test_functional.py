@@ -244,6 +244,23 @@ class TestSetUp(unittest.TestCase):
         start_traversing(portal, self.layer['request'])
         portal.restrictedTraverse('@@special-paste')
 
+    def testUninstallsCleanly(self):
+        portal = self.layer['portal']
+        setRoles(portal, TEST_USER_ID, ('Manager',))
+        qi = getToolByName(portal, 'portal_quickinstaller')
+        qi.uninstallProducts(['zest.specialpaste'])
+        start_traversing(portal, self.layer['request'])
+        self.assertRaises(AttributeError,
+                          portal.restrictedTraverse,
+                          ('@@special-paste',))
+        action_tool = getToolByName(portal, 'portal_actions')
+        folder_buttons = [action.getId() for action in
+                          action_tool.folder_buttons.listActions()]
+        self.assertFalse('specialpaste' in folder_buttons)
+        object_buttons = [action.getId() for action in
+                          action_tool.object_buttons.listActions()]
+        self.assertFalse('specialpaste' in object_buttons)
+
 
 class TestNotInstalled(unittest.TestCase):
 

@@ -39,3 +39,38 @@ def make_test_doc(portal, transition=None):
         wf_tool = getToolByName(portal, 'portal_workflow')
         wf_tool.doActionFor(doc, transition)
     return doc
+
+
+def make_folder_structure(portal):
+    """Make a demo folder structure with some documents.
+    """
+    wf_tool = getToolByName(portal, 'portal_workflow')
+
+    # documents in portal
+    portal.invokeFactory('Document', 'private-doc')
+    portal.invokeFactory('Document', 'published-doc')
+    wf_tool.doActionFor(portal['published-doc'], 'publish')
+
+    # private folder
+    portal.invokeFactory('Folder', 'private-folder')
+    folder = portal['private-folder']
+    folder.invokeFactory('Document', 'private-doc')
+    folder.invokeFactory('Document', 'published-doc')
+    wf_tool.doActionFor(folder['published-doc'], 'publish')
+    folder.invokeFactory('Document', 'pending-doc')
+    wf_tool.doActionFor(folder['pending-doc'], 'submit')
+    folder.invokeFactory('Folder', 'published-sub-folder')
+    wf_tool.doActionFor(folder['published-sub-folder'], 'publish')
+
+    # published folder
+    portal.invokeFactory('Folder', 'published-folder')
+    folder = portal['published-folder']
+    folder.invokeFactory('Document', 'private-doc')
+    folder.invokeFactory('Document', 'published-doc')
+    wf_tool.doActionFor(folder['published-doc'], 'publish')
+    folder.invokeFactory('Document', 'pending-doc')
+    wf_tool.doActionFor(folder['pending-doc'], 'submit')
+    folder.invokeFactory('Folder', 'private-sub-folder')
+
+    # target folder for pasting into.
+    portal.invokeFactory('Folder', 'target-folder')

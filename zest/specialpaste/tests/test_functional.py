@@ -5,7 +5,7 @@ from plone.app.testing import TEST_USER_ID
 from plone.app.testing import setRoles
 
 from zest.specialpaste.testing import ZEST_SPECIAL_PASTE_INTEGRATION_TESTING
-from zest.specialpaste.testing import make_test_doc
+from zest.specialpaste.testing import make_test_doc, make_folder_structure
 
 
 class TestNormalPaste(unittest.TestCase):
@@ -29,7 +29,7 @@ class TestNormalPaste(unittest.TestCase):
         self.assertEqual(wf_tool.getInfoFor(new_doc, 'review_state'),
                          'private')
 
-    def testCopyPastePublic(self):
+    def testCopyPastePublished(self):
         portal = self.layer['portal']
         setRoles(portal, TEST_USER_ID, ('Manager',))
         wf_tool = getToolByName(portal, 'portal_workflow')
@@ -46,7 +46,7 @@ class TestNormalPaste(unittest.TestCase):
         self.assertEqual(wf_tool.getInfoFor(new_doc, 'review_state'),
                          'private')
 
-    def testObjectCopyPastePublic(self):
+    def testObjectCopyPastePublished(self):
         portal = self.layer['portal']
         setRoles(portal, TEST_USER_ID, ('Manager',))
         wf_tool = getToolByName(portal, 'portal_workflow')
@@ -65,10 +65,57 @@ class TestNormalPaste(unittest.TestCase):
         self.assertEqual(wf_tool.getInfoFor(new_doc, 'review_state'),
                          'private')
 
-    def TODOtestFolderCopyPaste(self):
-        # Test copying multiple items, possibly nested, with various
-        # review states.
-        pass
+    def testFolderCopyPaste(self):
+        # Test copying multiple items, nested, with various review
+        # states.
+        portal = self.layer['portal']
+        setRoles(portal, TEST_USER_ID, ('Manager',))
+        make_folder_structure(portal)
+        wf_tool = getToolByName(portal, 'portal_workflow')
+
+        main_objects = [
+            portal['private-doc'],
+            portal['published-doc'],
+            portal['private-folder'],
+            portal['published-folder'],
+            ]
+        paths = ['/'.join(obj.getPhysicalPath()) for obj in main_objects]
+        request = self.layer['request']
+        request.set('paths', paths)
+        portal.folder_copy()
+        target = portal['target-folder']
+        # Sanity check for the cookie with info about the copied objects:
+        self.assertTrue(target.cb_dataValid())
+        target.folder_paste()
+        self.assertEqual(len(target.contentIds()), len(main_objects))
+
+        def get_state(obj):
+            return wf_tool.getInfoFor(obj, 'review_state')
+
+        self.assertEqual(get_state(
+            target['private-doc']), 'private')
+        self.assertEqual(get_state(
+            target['published-doc']), 'private')
+        self.assertEqual(get_state(
+            target['private-folder']), 'private')
+        self.assertEqual(get_state(
+            target['private-folder']['private-doc']), 'private')
+        self.assertEqual(get_state(
+            target['private-folder']['published-doc']), 'private')
+        self.assertEqual(get_state(
+            target['private-folder']['pending-doc']), 'private')
+        self.assertEqual(get_state(
+            target['private-folder']['published-sub-folder']), 'private')
+        self.assertEqual(get_state(
+            target['published-folder']), 'private')
+        self.assertEqual(get_state(
+            target['published-folder']['private-doc']), 'private')
+        self.assertEqual(get_state(
+            target['published-folder']['published-doc']), 'private')
+        self.assertEqual(get_state(
+            target['published-folder']['pending-doc']), 'private')
+        self.assertEqual(get_state(
+            target['published-folder']['private-sub-folder']), 'private')
 
 
 class TestSpecialPaste(unittest.TestCase):
@@ -94,7 +141,7 @@ class TestSpecialPaste(unittest.TestCase):
         self.assertEqual(wf_tool.getInfoFor(new_doc, 'review_state'),
                          'private')
 
-    def testObjectCopyPastePublic(self):
+    def testObjectCopyPastePublished(self):
         portal = self.layer['portal']
         setRoles(portal, TEST_USER_ID, ('Manager',))
         wf_tool = getToolByName(portal, 'portal_workflow')
@@ -113,7 +160,54 @@ class TestSpecialPaste(unittest.TestCase):
         self.assertEqual(wf_tool.getInfoFor(new_doc, 'review_state'),
                          'published')
 
-    def TODOtestFolderCopyPaste(self):
-        # Test copying multiple items, possibly nested, with various
-        # review states.
-        pass
+    def testFolderCopyPaste(self):
+        # Test copying multiple items, nested, with various review
+        # states.
+        portal = self.layer['portal']
+        setRoles(portal, TEST_USER_ID, ('Manager',))
+        make_folder_structure(portal)
+        wf_tool = getToolByName(portal, 'portal_workflow')
+
+        main_objects = [
+            portal['private-doc'],
+            portal['published-doc'],
+            portal['private-folder'],
+            portal['published-folder'],
+            ]
+        paths = ['/'.join(obj.getPhysicalPath()) for obj in main_objects]
+        request = self.layer['request']
+        request.set('paths', paths)
+        portal.folder_copy()
+        target = portal['target-folder']
+        # Sanity check for the cookie with info about the copied objects:
+        self.assertTrue(target.cb_dataValid())
+        target.restrictedTraverse('@@special-paste')()
+        self.assertEqual(len(target.contentIds()), len(main_objects))
+
+        def get_state(obj):
+            return wf_tool.getInfoFor(obj, 'review_state')
+
+        self.assertEqual(get_state(
+            target['private-doc']), 'private')
+        self.assertEqual(get_state(
+            target['published-doc']), 'published')
+        self.assertEqual(get_state(
+            target['private-folder']), 'private')
+        self.assertEqual(get_state(
+            target['private-folder']['private-doc']), 'private')
+        self.assertEqual(get_state(
+            target['private-folder']['published-doc']), 'published')  # XXX This fails.
+        self.assertEqual(get_state(
+            target['private-folder']['pending-doc']), 'pending')
+        self.assertEqual(get_state(
+            target['private-folder']['published-sub-folder']), 'published')
+        self.assertEqual(get_state(
+            target['published-folder']), 'published')
+        self.assertEqual(get_state(
+            target['published-folder']['private-doc']), 'private')
+        self.assertEqual(get_state(
+            target['published-folder']['published-doc']), 'published')
+        self.assertEqual(get_state(
+            target['published-folder']['pending-doc']), 'pending')
+        self.assertEqual(get_state(
+            target['published-folder']['private-sub-folder']), 'private')

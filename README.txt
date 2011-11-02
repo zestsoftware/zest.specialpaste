@@ -36,8 +36,8 @@ Installation
 ------------
 
 - Add ``zest.specialpaste`` to the ``eggs`` of your buildout (and to
-  the ``zcml`` too if you are on Plone 3.2 or earlier).  Rerun the
-  buildout.
+  the ``zcml`` too if you are on Plone 3.2 or earlier, but it does not
+  work there currently).  Rerun the buildout.
 
 - Install Zest Special Paste in the Add-on Products control panel.
   This adds a 'Special paste' action on objects and registers a

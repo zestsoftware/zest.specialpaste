@@ -21,8 +21,8 @@ def update_copied_objects_list(object, event):
     Note: this might be called too many times.
     """
     request = event.original.REQUEST
-#    if not ISpecialPasteInProgress.providedBy(request):
-#        return
+    if not ISpecialPasteInProgress.providedBy(request):
+        return
     annotations = IAnnotations(object, None)
     if annotations is None:
         logger.warn("Annotations on object not supported: "
@@ -40,8 +40,8 @@ def update_cloned_object(object, event):
     object.
     """
     request = object.REQUEST
-#    if not ISpecialPasteInProgress.providedBy(request):
-#        return
+    if not ISpecialPasteInProgress.providedBy(request):
+        return
     annotations = IAnnotations(object, None)
     if annotations is None:
         logger.info("No annotations.")

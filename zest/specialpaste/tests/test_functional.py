@@ -1,10 +1,9 @@
 import unittest2 as unittest
 
-from plone.app.testing import TEST_USER_ID
-from plone.app.testing import setRoles
 from Products.CMFCore.utils import getToolByName
 
 from zest.specialpaste.testing import ZEST_SPECIAL_PASTE_INTEGRATION_TESTING
+from zest.specialpaste.testing import make_test_doc
 
 
 class TestNormalPaste(unittest.TestCase):
@@ -12,14 +11,7 @@ class TestNormalPaste(unittest.TestCase):
     layer = ZEST_SPECIAL_PASTE_INTEGRATION_TESTING
 
     def _makeOne(self, transition=None):
-        portal = self.layer['portal']
-        setRoles(portal, TEST_USER_ID, ('Manager',))
-        new_id = portal.invokeFactory('Document', 'doc')
-        doc = portal[new_id]
-        if transition is not None:
-            wf_tool = getToolByName(portal, 'portal_workflow')
-            wf_tool.doActionFor(doc, transition)
-        return doc
+        return make_test_doc(self.layer['portal'], transition)
 
     def testCopyPastePrivate(self):
         portal = self.layer['portal']
@@ -79,14 +71,7 @@ class TestSpecialPaste(unittest.TestCase):
     layer = ZEST_SPECIAL_PASTE_INTEGRATION_TESTING
 
     def _makeOne(self, transition=None):
-        portal = self.layer['portal']
-        setRoles(portal, TEST_USER_ID, ('Manager',))
-        new_id = portal.invokeFactory('Document', 'doc')
-        doc = portal[new_id]
-        if transition is not None:
-            wf_tool = getToolByName(portal, 'portal_workflow')
-            wf_tool.doActionFor(doc, transition)
-        return doc
+        return make_test_doc(self.layer['portal'], transition)
 
     def testCopyPastePrivate(self):
         portal = self.layer['portal']

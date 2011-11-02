@@ -1,6 +1,8 @@
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import PLONE_FIXTURE
+from plone.app.testing import TEST_USER_ID
+from plone.app.testing import setRoles
 from plone.app.testing import IntegrationTesting
 from zope.configuration import xmlconfig
 from Products.CMFCore.utils import getToolByName
@@ -28,3 +30,15 @@ class SpecialPaste(PloneSandboxLayer):
 ZEST_SPECIAL_PASTE_FIXTURE = SpecialPaste()
 ZEST_SPECIAL_PASTE_INTEGRATION_TESTING = IntegrationTesting(
     bases=(ZEST_SPECIAL_PASTE_FIXTURE,), name="SpecialPaste:Integration")
+
+# A few helper functions.
+
+
+def make_test_doc(portal, transition=None):
+    setRoles(portal, TEST_USER_ID, ('Manager',))
+    new_id = portal.invokeFactory('Document', 'doc')
+    doc = portal[new_id]
+    if transition is not None:
+        wf_tool = getToolByName(portal, 'portal_workflow')
+        wf_tool.doActionFor(doc, transition)
+    return doc

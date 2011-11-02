@@ -11,6 +11,7 @@
            zcml:condition="have plone-41" />
 
   <five:registerPackage package="." initialize=".initialize" />
+  <i18n:registerTranslations directory="locales" />
 
   <browser:page
       for="zope.interface.Interface"

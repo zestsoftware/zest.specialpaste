@@ -6,15 +6,17 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="zest.specialpaste">
 
+  <include package="Products.CMFCore" file="permissions.zcml"
+           xmlns:zcml="http://namespaces.zope.org/zcml"
+           zcml:condition="have plone-41" />
+
   <five:registerPackage package="." initialize=".initialize" />
 
-  <!-- XXX other permission? -->
-  <!-- XXX only for folderish? -->
   <browser:page
       for="zope.interface.Interface"
       name="special-paste"
       class=".browser.SpecialPaste"
-      permission="zope2.View"
+      permission="cmf.AddPortalContent"
       layer="zest.specialpaste.interfaces.IZestSpecialPasteLayer"
       />
 

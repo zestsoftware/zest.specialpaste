@@ -28,8 +28,8 @@ originals.
 Compatibility
 -------------
 
-Tested on Plone 4.1.2.  Should work fine on 4.0 as well, and probably
-3.3 too.
+Tested on Plone 4.0 and 4.1.  Currently it does not work on Plone 3.3;
+that surprises me, so it might be fixable.
 
 
 Installation
@@ -40,7 +40,8 @@ Installation
   buildout.
 
 - Install Zest Special Paste in the Add-on Products control panel.
-  This adds a 'Special paste' action on objects.
+  This adds a 'Special paste' action on objects and registers a
+  browser layer that makes our @@special-paste browser view available.
 
 
 Future ideas
@@ -54,10 +55,4 @@ Future ideas
 
 - Take over local roles.
 
-
-TODO
-----
-
-- Test compatibility with earlier Plones.
-
-- Also add this action in the folder_contents.
+- Make compatible with Plone 3.3 as well.

@@ -4,7 +4,9 @@ Changelog
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fix paste error when copying a folder that has a sub folder that has
+  content.
+  [maurits]
 
 
 1.1 (2011-11-02)

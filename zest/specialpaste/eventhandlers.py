@@ -30,6 +30,19 @@ def update_copied_objects_list(object, event):
     - event.original is original folder
 
     Both copies have not been added to an acquisition context yet.
+
+    Oh shoot, when copying folder/sub/doc this event is also fired with:
+
+    - object is copy of doc, with physical path folder/sub/doc
+
+    - event.object is copy of folder
+
+    - event.original is original folder
+
+    - sub is nowhere to be seen...
+
+    Ah, we can use physical paths still.
+
     """
     request = event.original.REQUEST
     if not ISpecialPasteInProgress.providedBy(request):
@@ -42,9 +55,15 @@ def update_copied_objects_list(object, event):
     if object is event.object:
         original = event.original
     else:
-        original = event.original[object.getId()]
+        path = '/'.join(object.getPhysicalPath())
+        try:
+            original = event.original.restrictedTraverse(path)
+        except:
+            logger.error("Could not get original %s from parent %r", path,
+                event.original)
+            raise
     annotations[ANNO_KEY] = original.getPhysicalPath()
-    logger.info("Annotation set.")
+    logger.debug("Annotation set: %r", '/'.join(original.getPhysicalPath()))
 
 
 def update_cloned_object(object, event):
@@ -59,13 +78,13 @@ def update_cloned_object(object, event):
         return
     annotations = IAnnotations(object, None)
     if annotations is None:
-        logger.info("No annotations.")
+        logger.debug("No annotations.")
         return
     original_path = annotations.get(ANNO_KEY, None)
     if not original_path:
-        logger.info("No original found.")
+        logger.debug("No original found.")
         return
-    logger.info("Original found: %r", original_path)
+    logger.debug("Original found: %r", original_path)
     # We could delete our annotation, but it does not hurt to keep it
     # and it may hurt to remove it when others write subscribers that
     # depend on it.

@@ -72,10 +72,11 @@ def make_folder_structure(portal):
     folder.invokeFactory('Document', 'private-doc')
     folder.invokeFactory('Document', 'published-doc')
     wf_tool.doActionFor(folder['published-doc'], 'publish')
-    folder.invokeFactory('Document', 'pending-doc')
-    wf_tool.doActionFor(folder['pending-doc'], 'submit')
     folder.invokeFactory('Folder', 'published-sub-folder')
     wf_tool.doActionFor(folder['published-sub-folder'], 'publish')
+    subfolder = folder['published-sub-folder']
+    subfolder.invokeFactory('Document', 'pending-doc')
+    wf_tool.doActionFor(subfolder['pending-doc'], 'submit')
 
     # published folder
     portal.invokeFactory('Folder', 'published-folder')
@@ -84,9 +85,10 @@ def make_folder_structure(portal):
     folder.invokeFactory('Document', 'private-doc')
     folder.invokeFactory('Document', 'published-doc')
     wf_tool.doActionFor(folder['published-doc'], 'publish')
-    folder.invokeFactory('Document', 'pending-doc')
-    wf_tool.doActionFor(folder['pending-doc'], 'submit')
     folder.invokeFactory('Folder', 'private-sub-folder')
+    subfolder = folder['private-sub-folder']
+    subfolder.invokeFactory('Document', 'pending-doc')
+    wf_tool.doActionFor(subfolder['pending-doc'], 'submit')
 
     # target folder for pasting into.
     portal.invokeFactory('Folder', 'target-folder')

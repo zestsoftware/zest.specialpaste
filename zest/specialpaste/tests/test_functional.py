@@ -109,9 +109,10 @@ class TestNormalPaste(unittest.TestCase):
         self.assertEqual(get_state(
             target['private-folder']['published-doc']), 'private')
         self.assertEqual(get_state(
-            target['private-folder']['pending-doc']), 'private')
-        self.assertEqual(get_state(
             target['private-folder']['published-sub-folder']), 'private')
+        self.assertEqual(get_state(
+            target['private-folder']['published-sub-folder']['pending-doc']),
+            'private')
         self.assertEqual(get_state(
             target['published-folder']), 'private')
         self.assertEqual(get_state(
@@ -119,9 +120,10 @@ class TestNormalPaste(unittest.TestCase):
         self.assertEqual(get_state(
             target['published-folder']['published-doc']), 'private')
         self.assertEqual(get_state(
-            target['published-folder']['pending-doc']), 'private')
-        self.assertEqual(get_state(
             target['published-folder']['private-sub-folder']), 'private')
+        self.assertEqual(get_state(
+            target['published-folder']['private-sub-folder']['pending-doc']),
+            'private')
 
 
 class TestSpecialPaste(unittest.TestCase):
@@ -207,9 +209,10 @@ class TestSpecialPaste(unittest.TestCase):
         self.assertEqual(get_state(
             target['private-folder']['published-doc']), 'published')
         self.assertEqual(get_state(
-            target['private-folder']['pending-doc']), 'pending')
-        self.assertEqual(get_state(
             target['private-folder']['published-sub-folder']), 'published')
+        self.assertEqual(get_state(
+            target['private-folder']['published-sub-folder']['pending-doc']),
+            'pending')
         self.assertEqual(get_state(
             target['published-folder']), 'published')
         self.assertEqual(get_state(
@@ -217,9 +220,10 @@ class TestSpecialPaste(unittest.TestCase):
         self.assertEqual(get_state(
             target['published-folder']['published-doc']), 'published')
         self.assertEqual(get_state(
-            target['published-folder']['pending-doc']), 'pending')
-        self.assertEqual(get_state(
             target['published-folder']['private-sub-folder']), 'private')
+        self.assertEqual(get_state(
+            target['published-folder']['private-sub-folder']['pending-doc']),
+            'pending')
 
 
 class TestSetUp(unittest.TestCase):

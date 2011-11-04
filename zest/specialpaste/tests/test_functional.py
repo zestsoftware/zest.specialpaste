@@ -225,6 +225,42 @@ class TestSpecialPaste(unittest.TestCase):
             target['published-folder']['private-sub-folder']['pending-doc']),
             'pending')
 
+    def testRenamedFolderCopyPaste(self):
+        # Test copying a folder with items to the same location, so
+        # that the copied folder gets a different name.
+        portal = self.layer['portal']
+        setRoles(portal, TEST_USER_ID, ('Manager',))
+        make_folder_structure(portal)
+        wf_tool = getToolByName(portal, 'portal_workflow')
+
+        main_objects = [
+            portal['private-folder'],
+            ]
+        paths = ['/'.join(obj.getPhysicalPath()) for obj in main_objects]
+        request = self.layer['request']
+        request.set('paths', paths)
+        portal.folder_copy()
+        target = portal
+        # Sanity check for the cookie with info about the copied objects:
+        self.assertTrue(target.cb_dataValid())
+        start_traversing(portal, self.layer['request'])
+        target.restrictedTraverse('@@special-paste')()
+
+        def get_state(obj):
+            return wf_tool.getInfoFor(obj, 'review_state')
+
+        self.assertEqual(get_state(
+            target['copy_of_private-folder']), 'private')
+        self.assertEqual(get_state(
+            target['copy_of_private-folder']['private-doc']), 'private')
+        self.assertEqual(get_state(
+            target['copy_of_private-folder']['published-doc']), 'published')
+        self.assertEqual(get_state(
+            target['copy_of_private-folder']['published-sub-folder']), 'published')
+        self.assertEqual(get_state(
+            target['copy_of_private-folder']['published-sub-folder']['pending-doc']),
+            'pending')
+
 
 class TestSetUp(unittest.TestCase):
 

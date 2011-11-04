@@ -29,13 +29,15 @@ def update_copied_objects_list(object, event):
     Both copies have not been added to an acquisition context yet.
 
     When copying a folder that has sub folders with content, like
-    folder/sub/doc, this event is also fired with:
+    folder/sub/doc, and pasting it to the same location so the origal
+    and pasted folders are at the same level, this event is also fired
+    with:
 
-    - object is copy of doc, with physical path folder/sub/doc
+    - object is copy of doc, with physical path copy_of_folder/sub/doc
 
-    - event.object is copy of folder
+    - event.object is copy of folder, with physical path copy_of_folder
 
-    - event.original is original folder
+    - event.original is the original folder
 
     - sub is nowhere to be seen...
 
@@ -52,7 +54,9 @@ def update_copied_objects_list(object, event):
     if object is event.object:
         original = event.original
     else:
-        path = '/'.join(object.getPhysicalPath())
+        # Use the path minus the top level folder, as that may be
+        # copy_of_folder.
+        path = '/'.join(object.getPhysicalPath()[1:])
         try:
             original = event.original.restrictedTraverse(path)
         except:

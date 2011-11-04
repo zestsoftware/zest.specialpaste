@@ -18,20 +18,18 @@ def update_copied_objects_list(object, event):
     so we cannot really do much here yet.  We are only interested in
     the old object now.
 
-    Note: this might be called too many times.
+    When copying a single item:
 
-    When a folder with document is copied, one event is sent for the
-    folder and one for the document.  The document one is special:
+    - object is copy of item
 
-    - object is copy of document
+    - event.object is copy of item
 
-    - event.object is copy of folder
-
-    - event.original is original folder
+    - event.original is original item
 
     Both copies have not been added to an acquisition context yet.
 
-    Oh shoot, when copying folder/sub/doc this event is also fired with:
+    When copying a folder that has sub folders with content, like
+    folder/sub/doc, this event is also fired with:
 
     - object is copy of doc, with physical path folder/sub/doc
 
@@ -41,8 +39,7 @@ def update_copied_objects_list(object, event):
 
     - sub is nowhere to be seen...
 
-    Ah, we can use physical paths still.
-
+    Luckily we can use physical paths in that case.
     """
     request = event.original.REQUEST
     if not ISpecialPasteInProgress.providedBy(request):

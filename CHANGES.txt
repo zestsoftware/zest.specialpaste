@@ -4,6 +4,10 @@ Changelog
 1.2 (unreleased)
 ----------------
 
+- Do less logging as this can be overly verbose or warn about things
+  that in practice occur for very normal reasons.
+  [maurits]
+
 - Fix paste error when copying a folder that has a sub folder that has
   content.
   [maurits]

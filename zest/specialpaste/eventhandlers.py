@@ -48,8 +48,9 @@ def update_copied_objects_list(object, event):
         return
     annotations = IAnnotations(object, None)
     if annotations is None:
-        logger.warn("Annotations on object not supported: "
-                    "zest.specialpaste will not work.")
+        # Annotations on this object are not supported.  This happens
+        # e.g. for SyndicationInformation, ATSimpleStringCriterion,
+        # and WorkflowPolicyConfig, so it is quite normal.
         return
     if object is event.object:
         original = event.original
@@ -120,8 +121,8 @@ def update_cloned_object(object, event):
             logger.warn("WorkflowException when setting review state of "
                         "cloned object %r to %s.", object, original_state)
         else:
-            logger.info("Setting review state of cloned "
-                        "object %r to %s.", object, original_state)
+            logger.debug("Setting review state of cloned "
+                         "object %r to %s.", object, original_state)
             # Update role to permission assignments.
             wf.updateRoleMappingsFor(object)
 

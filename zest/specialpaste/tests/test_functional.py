@@ -261,6 +261,25 @@ class TestSpecialPaste(unittest.TestCase):
             target['copy_of_private-folder']['published-sub-folder']['pending-doc']),
             'pending')
 
+    def testCopyPasteNonAnnotationPublic(self):
+        # Does something break when copy-pasting an object that is not
+        # annotatable?
+        class FakeObject(object):
+            def __init__(self, request=None):
+                self.REQUEST = request
+        from zope.lifecycleevent import ObjectCopiedEvent
+        from zope.event import notify
+        from zope.interface import alsoProvides
+        from zest.specialpaste.interfaces import ISpecialPasteInProgress
+        from OFS.event import ObjectClonedEvent
+
+        portal = self.layer['portal']
+        doc = FakeObject(portal.REQUEST)
+        alsoProvides(portal.REQUEST, ISpecialPasteInProgress)
+        # The real test here is that the next calls do not crash.
+        notify(ObjectCopiedEvent(doc, portal))
+        notify(ObjectClonedEvent(doc))
+
 
 class TestSetUp(unittest.TestCase):
 

@@ -40,5 +40,5 @@
       description="Installs the zest.specialpaste package"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
-  
+
 </configure>
